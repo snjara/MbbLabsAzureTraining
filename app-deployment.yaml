@@ -6,7 +6,7 @@ spec:
   selector:
     matchLabels:
       app: springboot-k8s-mysql
-  replicas: 3
+  replicas: 1
   template:
     metadata:
       labels:
@@ -14,30 +14,44 @@ spec:
     spec:
       containers:
         - name: springboot-crud-k8s
-          image: snjara/azure-training-image3:latest
+          image: snjara/azure-training-image4:latest
           ports:
             - containerPort: 8080
           env:   # Setting Enviornmental Variables
             - name: DB_HOST   # Setting Database host address from configMap
-              value : snjara.mysql.database.azure.com
-
+              valueFrom:
+               configMapKeyRef:
+                 name: springboot-config
+                 key: DB_HOST
             - name: DB_NAME  # Setting Database name from configMap
-              value : mbblab2
+              valueFrom:
+               configMapKeyRef:
+                 name: springboot-config
+                 key: DB_NAME
 
             - name: DB_USERNAME  # Setting Database username from Secret
-              value : snjara
+              valueFrom:
+               configMapKeyRef:
+                 name: springboot-config
+                 key: DB_USER
 
             - name: DB_PASSWORD # Setting Database password from Secret
-              value : Amsha@9679
+              valueFrom:
+               secretKeyRef:
+                 name: mysql-secret
+                 key: DB_PASS
               
             - name: DB_PORT # Setting Database password from Secret
-              value : 3306
+              valueFrom:
+               configMapKeyRef:
+                 name: springboot-config
+                 key: DB_PORT
 ---
 
 apiVersion: v1 # Kubernetes API version
 kind: Service # Kubernetes resource kind we are creating
 metadata: # Metadata of the resource kind we are creating
-  name: springboot-crud-svc
+  name: springboot-crud-svc-test
 spec:
   selector:
     app: springboot-k8s-mysql
