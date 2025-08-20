@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: spring-app
-          image: mytrainingcontainerregistry.azurecr.io/snjara/azure-training-image
+          image: mytrainingcontainerregistry.azurecr.io/azure-training-image5
           ports:
             - containerPort: 8080
 
